@@ -2,10 +2,10 @@
 
 O projeto consiste em um sistema embarcado de navegação, baseado no ESP32-S3, que recebe comandos via BLE (Bluetooth Low Energy) de um aplicativo móvel, exibe informações de navegação em um display OLED e, adicionalmente.
 
----
+---![WhatsApp Image 2026-02-16 at 19 23 57](https://github.com/user-attachments/assets/6b18339c-76f9-4838-9386-edd987183866)
+
 
 ## *Componentes Principais*
-![Uploading WhatsApp Image 2026-01-08 at 22.40.26 (1).jpeg…]()
 
 ### *1. ESP32-S3*
 - Microcontrolador central do sistema.
