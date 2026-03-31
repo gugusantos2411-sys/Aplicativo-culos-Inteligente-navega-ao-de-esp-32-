@@ -72,17 +72,6 @@ export const useOffline = () => {
     }
   }, [deferredPrompt]);
 
-  // Salvar dados offline
-  const saveOfflineData = useCallback((data: Partial<OfflineData>) => {
-    try {
-      const currentData = getOfflineData();
-      const newData = { ...currentData, ...data, lastSync: Date.now() };
-      localStorage.setItem('castrilha_offline_data', JSON.stringify(newData));
-    } catch (error) {
-      console.error('Erro ao salvar dados offline:', error);
-    }
-  }, []);
-
   // Carregar dados offline
   const getOfflineData = useCallback((): OfflineData => {
     try {
@@ -104,6 +93,17 @@ export const useOffline = () => {
       lastSync: Date.now()
     };
   }, []);
+
+  // Salvar dados offline
+  const saveOfflineData = useCallback((data: Partial<OfflineData>) => {
+    try {
+      const currentData = getOfflineData();
+      const newData = { ...currentData, ...data, lastSync: Date.now() };
+      localStorage.setItem('castrilha_offline_data', JSON.stringify(newData));
+    } catch (error) {
+      console.error('Erro ao salvar dados offline:', error);
+    }
+  }, [getOfflineData]);
 
   // Sincronizar dados quando online
   const syncData = useCallback(async () => {

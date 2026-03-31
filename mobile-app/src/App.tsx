@@ -106,7 +106,7 @@ function App() {
   const [introStep, setIntroStep] = useState(0);
   const [showLocationRequest, setShowLocationRequest] = useState(false);
 
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [, setMap] = useState<google.maps.Map | null>(null);
   const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
   const [currentPosition, setCurrentPosition] = useState<google.maps.LatLngLiteral | null>(null);
   const [simplifiedInstructions, setSimplifiedInstructions] = useState<string[]>([]);
@@ -126,7 +126,7 @@ function App() {
   const destinationRef = useRef<HTMLInputElement>(null);
 
   // Sistema de sons
-  const { playSound, playHoverSound, preloadSounds } = useSounds();
+  const { playSound, preloadSounds } = useSounds();
 
   // Animação de entrada
   useEffect(() => {
@@ -171,10 +171,7 @@ function App() {
   // Sistema offline
   const { 
     isOnline, 
-    registerServiceWorker, 
-    saveOfflineData, 
-    getOfflineData,
-    sendNotification 
+    registerServiceWorker
   } = useOffline();
 
   // Verificar se o navegador suporta Web Bluetooth
@@ -459,7 +456,7 @@ function App() {
     }
   };
 
-  const stopNavigation = () => {
+  const stopNavigation = useCallback(() => {
     playSound('click');
     if (locationWatcherId.current !== null) {
       navigator.geolocation.clearWatch(locationWatcherId.current);
@@ -468,7 +465,7 @@ function App() {
     setIsNavigating(false);
     alert("Navegação encerrada.");
     playSound('notification');
-  };
+  }, [playSound]);
 
   const advanceToStep = useCallback((stepIndex: number) => {
     if (!directionsResponse) return;
@@ -484,7 +481,7 @@ function App() {
     sendSingleInstructionToESP32(instructionText);
     setCurrentStepIndex(prevIndex => prevIndex + 1);
     playSound('instruction');
-  }, [directionsResponse, sendSingleInstructionToESP32]);
+  }, [directionsResponse, sendSingleInstructionToESP32, playSound, stopNavigation]);
 
   const handleLocationUpdate = useCallback((position: GeolocationPosition) => {
     if (!directionsResponse?.routes[0]) return;
@@ -518,7 +515,7 @@ function App() {
   const handleLocationError = useCallback((error: GeolocationPositionError) => {
     alert(`Erro de geolocalização: ${error.message}`);
     stopNavigation();
-  }, []);
+  }, [stopNavigation]);
   
   // Este useEffect é o cérebro da navegação em tempo real
   useEffect(() => {
